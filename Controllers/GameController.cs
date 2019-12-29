@@ -30,16 +30,9 @@ namespace GameAPI.Contoller
                 model.Id = Guid.NewGuid();
                 model.firstPlayer = GameBusiness.GetRdnPlayer();
                 model.turn = model.firstPlayer;
-                //model.matrix = GameBusiness.Positions(context);
-                var matrix = new List<Position>();
-                for (int i = 0; i < 9; i++)
-                {
-                    matrix.Add(new Position() { id = Guid.NewGuid(), GameID = model.Id, player = ' ' });
-                }
-
-                context.Positions.AddRange(matrix);
-
-                context.Games.Include(o => o.matrix);
+                var positions = GameBusiness.Positions(model);
+                
+                context.Positions.AddRange(positions);
                 context.Games.Add(model); 
                                
                 await context.SaveChangesAsync();

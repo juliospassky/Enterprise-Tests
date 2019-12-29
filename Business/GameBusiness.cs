@@ -27,19 +27,20 @@ namespace GameAPI.Business
                 return 'X';
         }
 
-        public static List<Position> Positions()
+        public static List<Position> Positions(Game model)
         {
-            var matrix = new List<Position>();
-            for (int i = 0; i < 9; i++)
+            var positions = new List<Position>();
+            for (int i = 0; i < 3; i++)
             {
-                matrix.Add(new Position() { id = Guid.NewGuid(), player = ' ' });
+                for (int j = 0; j < 3; j++)
+                    positions.Add(new Position() { id = Guid.NewGuid(), GameID = model.Id, player = ' ', x = i, y = j });
             }
-            return matrix;
+            return positions;
         }
 
         public static bool IsWinner(List<Position> positions, char player)
         {
-            #region Win in lines
+            #region Win in columns
             if (positions[0].player == player && positions[1].player == player && positions[2].player == player)
                 return true;
 
@@ -50,7 +51,7 @@ namespace GameAPI.Business
                 return true;
             #endregion
 
-            #region Win in columns
+            #region Win in lines
             if (positions[0].player == player && positions[3].player == player && positions[6].player == player)
                 return true;
 
@@ -72,9 +73,9 @@ namespace GameAPI.Business
             return false;
         }
 
-        public static bool IsDraw(List<Position> positions)
-        {
-            return !positions.Select(o => o.player == ' ').ToList().Any();
+        public static bool IsDraw(List<Position> positions, Guid id)
+        {   
+           return !positions.Select(o => o.player == ' ' && o.GameID == id).ToList().Contains(true);
         }
     }
 }

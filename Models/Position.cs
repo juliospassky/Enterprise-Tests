@@ -7,7 +7,7 @@ namespace GameAPI.Models
     {
         [Key]
         public Guid id { get; set; }
-        public Guid GameID {get;set;}
+        public Guid GameID { get; set; }
         public int x { get; set; }
         public int y { get; set; }
         public char player { get; set; }

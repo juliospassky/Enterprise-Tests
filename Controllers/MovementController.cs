@@ -21,13 +21,13 @@ namespace GameAPI.Contoller
                 
                 #region Validations Post
                 if (!MovementBusiness.IsValidGameID(context, id))
-                    return (NotFound("Partida não encontrada"));
-
+                    return new JsonResult(new {msg = "Partida não encontrada"});
+                
                 if (!MovementBusiness.IsPlayerTurn(context, model, id))
-                    return (NotFound("Não é turno do jogador"));
+                    return new JsonResult(new {msg = "Não é turno do jogador"});
 
                 if (!MovementBusiness.IsValidPosition(context, model.position.x, model.position.y, id))
-                    return (NotFound("Posição inválida"));
+                    return new JsonResult(new {msg = "Posição inválida"});
                 #endregion
 
 
@@ -37,19 +37,20 @@ namespace GameAPI.Contoller
                 var game = context.Games.FirstOrDefault(o => o.Id == id);
                 game.turn = GameBusiness.ChangeTurn(game.turn);
 
-                var position = context.Positions.FirstOrDefault(o => o.GameID == id);
-                position.player = model.player;
+                var positions = context.Positions.FirstOrDefault(o => o.GameID == id && o.x == model.position.x && o.y == model.position.y);
+                positions.player = model.player;
 
                 await context.SaveChangesAsync();
 
-                #region Validations End Game
-                if (GameBusiness.IsWinner(game.matrix.ToList(), model.player))
-                    return (NotFound($"Partida finalizada, win {model.player}"));
+                var finalPositions = context.Positions.Where(o => o.GameID == id).ToList();
 
-                if (GameBusiness.IsDraw(game.matrix.ToList()))
-                {
-                    return (NotFound("Partida finalizada, draw"));
-                }
+                #region Validations End Game
+                if (GameBusiness.IsWinner(finalPositions, model.player))
+                    return new JsonResult(new {msg = "Partida finalizada", winner = $"{model.player}"});
+
+                if (GameBusiness.IsDraw(finalPositions, id))
+                    return new JsonResult(new {msg = "Partida finalizada", winner = "Draw"});
+                
                 #endregion
 
                 return model;

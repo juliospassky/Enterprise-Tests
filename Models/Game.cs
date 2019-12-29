@@ -12,7 +12,5 @@ namespace GameAPI.Models
         public char firstPlayer { get; set; }
 
         public char turn { get; set; }
-
-        public virtual ICollection<Position> matrix { get; set; }
     }
 }

@@ -12,12 +12,7 @@ namespace GameAPI.Data
         public DbSet<Position> Positions { get; set; }
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {            
-        }
-        
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Game>().HasMany(s => s.matrix).WithOne();
-        }
+        }     
 
     }
 }

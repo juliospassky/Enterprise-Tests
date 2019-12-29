@@ -6,13 +6,13 @@ namespace GameAPI.Models
     public class Movement
     {
         [Key]
-        public Guid Id {get; set;}
-        
-        [Required]
-        public char player {get; set;}
+        public Guid Id { get; set; }
 
         [Required]
-        public Position position {get; set;}
-    
+        public char player { get; set; }
+
+        [Required]
+        public Position position { get; set; }
+
     }
 }

@@ -25,20 +25,28 @@ namespace GameAPI.Contoller
         [Route("")]
         public async Task<ActionResult<Game>> Post([FromServices] DataContext context, [FromBody] Game model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 model.Id = Guid.NewGuid();
                 model.firstPlayer = GameBusiness.GetRdnPlayer();
                 model.turn = model.firstPlayer;
+                //model.matrix = GameBusiness.Positions(context);
+                var matrix = new List<Position>();
+                for (int i = 0; i < 9; i++)
+                {
+                    matrix.Add(new Position() { id = Guid.NewGuid(), GameID = model.Id, player = ' ' });
+                }
 
-                context.Games.Add(model);
+                context.Positions.AddRange(matrix);
+
+                context.Games.Include(o => o.matrix);
+                context.Games.Add(model); 
+                               
                 await context.SaveChangesAsync();
                 return model;
             }
-            else
-            {
-                return(BadRequest(ModelState));
-            }
+
+            return (BadRequest(ModelState));
         }
     }
 }

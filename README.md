@@ -1,7 +1,7 @@
 # JogoVelhaAPI
 
 ------------------------
-Dependência: dotenet versão > 3
+Dependência: dotnet versão > 3
 https://dotnet.microsoft.com/download/dotnet-core/3.0
 
 ------------------------
